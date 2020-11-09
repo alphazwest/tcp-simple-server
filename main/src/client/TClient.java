@@ -10,8 +10,6 @@ public class TClient {
 
     // Define fields
     private Socket socket;
-    private Scanner in;
-    private PrintStream out;
 
     // Basic constructor
     public TClient(String host, int port) throws IOException {
@@ -20,26 +18,24 @@ public class TClient {
 
     // Listen for user input
     public void listen() throws IOException {
-        String input;  // hold user input
+        String input;
         while(this.socket.isConnected()){
 
-            // Define Steams
-            this.out = new PrintStream(socket.getOutputStream(), true);
-            this.in = new Scanner(socket.getInputStream());
+            // Define Streams
+            PrintStream out = new PrintStream(socket.getOutputStream(), true);
+            Scanner in = new Scanner(socket.getInputStream());
 
-            // Send user message to server
-            // NOTE: Scanner + Keyboard in while scan.hasNext() results in infinite loop
-            //       unless a specific series of terminating letters are used + handled..
+            // Get input from user
             Scanner userInput = new Scanner(System.in);
             input = userInput.nextLine();
-            this.out.println(input);
+            out.println(input);
 
             // Accept Server Response
-            System.out.println("Server Response: " + this.in.nextLine());
+            System.out.println("Server Response: " + in.nextLine());
 
             // Close things out
-            this.out.close();
-            this.in.close();
+            out.close();
+            in.close();
             userInput.close();
         }
     }

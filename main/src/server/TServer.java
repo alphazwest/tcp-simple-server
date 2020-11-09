@@ -9,8 +9,6 @@ import java.util.Scanner;
 public class TServer {
 
     private ServerSocket serverSocket;
-    private Scanner in;
-    private PrintStream out;
 
     // Constructor
     public TServer(int port) throws IOException {
@@ -20,6 +18,7 @@ public class TServer {
     // Listens for client input
     public void listen() throws IOException {
 
+        // Start accepting connections
         Socket socket = serverSocket.accept();
         String input;
 
@@ -27,16 +26,22 @@ public class TServer {
         while(socket.isConnected()){
 
             // Define data streams
-            this.in = new Scanner(socket.getInputStream());
-            this.out = new PrintStream(socket.getOutputStream(), true);
+            Scanner in = new Scanner(socket.getInputStream());
+            PrintStream out = new PrintStream(socket.getOutputStream(), true);
 
             // Listen for client request
-            while((input = this.in.nextLine()) != null){
-                System.out.println("Message Received: " + input);
+            while((input = in.nextLine()) != null){
+
+                // Streams client message to System.out
+                System.out.println("New Message: " + input);
 
                 // Send response
-                this.out.println("My response is yes!");
+                out.println("Message Received.");
             }
+
+            // Close streams
+            in.close();
+            out.close();
         }
     }
 }
